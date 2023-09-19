@@ -46,7 +46,6 @@ python manage.py test
 
 Your project has an endpoint `/` that returns a JSON response with status 200, details "ok" and result "working".
 
-Input:
 ```json
 
 {
@@ -55,7 +54,4 @@ Input:
   "result": "working"
 }
 
-Output:
-
-{"status_code": 200, "detail": "ok", "result": "working"}
 
