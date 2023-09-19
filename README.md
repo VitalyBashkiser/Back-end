@@ -8,7 +8,7 @@
 
 To run this project, you need to have the following programs installed:
 
-- Python 3.10+
+- Python 3.6+
 - Django 3.2+
 - інші необхідні бібліотеки (зазначте їх тут)
 
