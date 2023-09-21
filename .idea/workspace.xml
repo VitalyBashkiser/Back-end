@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="__pycache__, .idea">
-      <change afterPath="$PROJECT_DIR$/Backend/start.sh" afterDir="false" />
+    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore">
+      <change afterPath="$PROJECT_DIR$/Backend/.env.dev" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Backend/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/start.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +147,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695220296862</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore">
+      <created>1695322253397</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1695322253397</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -169,6 +175,7 @@
     <MESSAGE value="Add Django frame, create health check endpoint, also editing URL links, making changes to folders such as: views.py, setting.py, Backend\urls.py, main\urls.py" />
     <MESSAGE value="Add project hot reload" />
     <MESSAGE value="Add .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add .gitignore" />
+    <MESSAGE value="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore" />
   </component>
 </project>

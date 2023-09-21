@@ -18,5 +18,10 @@ RUN pip install -r requirements.txt
 # Copy all other project files
 COPY . .
 
+COPY . start.sh
+
+# Give permissions to run the script
+RUN chmod +x start.sh
+
 # The command to run Django
-CMD ["sh", "start.sh"]
+CMD ["sh", "./start.sh"]
