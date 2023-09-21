@@ -1,0 +1,15 @@
+__pycache__
+requirements.txt
+*.pyc
+*.pyo
+*.pyd
+Dockerfile
+docker-compose.yml
+.git
+.env
+env/
+.venv
+venv/
+.gitignore
+.DS_Store
+db.sqlite3
