@@ -27,9 +27,7 @@ log/
 */migrations/
 
 # PyCharm
-<<<<<<< HEAD
-.idea/
-=======
 .idea/
 
->>>>>>> 2f4b5ffc46bacd980aeec71e066f2d635dbdec97
+
+
