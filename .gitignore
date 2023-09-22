@@ -4,6 +4,7 @@ __pycache__/
 
 # Environments
 .env
+.env.docker
 env/
 .venv
 venv/
@@ -27,7 +28,8 @@ log/
 */migrations/
 
 # PyCharm
-.idea/
+.idea
+
 
 
 
