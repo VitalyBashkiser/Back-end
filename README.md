@@ -1,3 +1,4 @@
+BE_#2_-_Add_Dockerfile
 ## Clone the repository:
 
 ```
@@ -24,3 +25,11 @@ docker-compose up --build
 This command will build the necessary Docker image and start the application.
 
 ## Open your web browser and go to http://127.0.0.1:8000 to access the application.
+
+
+
+
+
+
+
+
