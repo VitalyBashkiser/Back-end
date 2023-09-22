@@ -11,3 +11,15 @@ services:
     env_file:
       - .env.dev
 
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: BASE
+      POSTGRES_USER: Vitalii
+      POSTGRES_PASSWORD: 34500_R
+
+  redis:
+    image: redis
+
+    volumes:
+      - .:/code
