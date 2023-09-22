@@ -4,14 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore">
-      <change afterPath="$PROJECT_DIR$/Backend/.env.dev" afterDir="false" />
+    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="Add .env.dev, update .dockerignore, update docker-compose.yml, update Dockerfile, update start.sh. Fix: .dockerignore, update settings.py">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.dockerignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/Backend/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Backend/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.env.dev" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.env.dev" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.env.sample" beforeDir="false" afterPath="$PROJECT_DIR$/.env.sample" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/Backend/.env" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Backend/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/start.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/start.sh" beforeDir="false" afterPath="$PROJECT_DIR$/start.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +65,7 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\python\Back-end\Backend" />
       <recent name="D:\python\Back-end" />
+      <recent name="D:\python\Back-end\.idea" />
       <recent name="D:\python\Back-end\Backend\venv" />
       <recent name="D:\python\Back-end\Backend\main" />
     </key>
@@ -154,7 +158,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695322253397</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Add .env.dev, update .dockerignore, update docker-compose.yml, update Dockerfile, update start.sh. Fix: .dockerignore, update settings.py">
+      <created>1695333594982</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1695333594982</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -176,6 +187,7 @@
     <MESSAGE value="Add project hot reload" />
     <MESSAGE value="Add .gitignore" />
     <MESSAGE value="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore" />
+    <MESSAGE value="Add .env.dev, update .dockerignore, update docker-compose.yml, update Dockerfile, update start.sh. Fix: .dockerignore, update settings.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add .env.dev, update .dockerignore, update docker-compose.yml, update Dockerfile, update start.sh. Fix: .dockerignore, update settings.py" />
   </component>
 </project>

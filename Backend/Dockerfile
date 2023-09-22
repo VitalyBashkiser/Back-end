@@ -6,6 +6,10 @@ FROM python:3.10.13
 # Set up a working directory inside the container
 WORKDIR /Backend
 
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 # Copy requirements.txt inside the container
 COPY requirements.txt .
 
@@ -16,7 +20,7 @@ RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
 # Copy all other project files
-COPY . .
+COPY ../ .
 
 COPY . start.sh
 
