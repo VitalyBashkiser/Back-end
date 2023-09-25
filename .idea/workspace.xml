@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="Add redis, postgres. Update docker-compose.yml, update sattings.">
+    <list default="true" id="2ddddb08-5882-44c1-9681-76812685b2a8" name="Changes" comment="not influencing fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Backend/requirements.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend/.env.dev" beforeDir="false" afterPath="$PROJECT_DIR$/Backend/.env.dev" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,7 +23,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="BE_#2_-_Add_Dockerfile" />
+        <entry key="$PROJECT_DIR$" value="_BE_#3_-_Add_Databases" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -42,17 +42,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;__BE__#3__-__Add__Databases&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/python/Back-end&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "TODO_SCOPE": "All Places",
+    "git-widget-placeholder": "BE__#2__-__Add__Dockerfile",
+    "last_opened_file_path": "D:/python/Back-end",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\python\Back-end\Backend" />
@@ -164,7 +164,14 @@
       <option name="project" value="LOCAL" />
       <updated>1695400226871</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="not influencing fix">
+      <created>1695648960289</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1695648960289</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -188,6 +195,7 @@
     <MESSAGE value="Add Dockerfile, .dockerignore, docker-compose.yml, requirements.txt, start.sh. Fix: .gitignore" />
     <MESSAGE value="Add .env.dev, update .dockerignore, update docker-compose.yml, update Dockerfile, update start.sh. Fix: .dockerignore, update settings.py" />
     <MESSAGE value="Add redis, postgres. Update docker-compose.yml, update sattings." />
-    <option name="LAST_COMMIT_MESSAGE" value="Add redis, postgres. Update docker-compose.yml, update sattings." />
+    <MESSAGE value="not influencing fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="not influencing fix" />
   </component>
 </project>
