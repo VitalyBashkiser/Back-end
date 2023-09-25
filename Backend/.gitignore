@@ -7,7 +7,7 @@ __pycache__/
 .env
 env/
 .venv
-venv/
+../venv/
 
 # Django stuff:
 local_settings.py
