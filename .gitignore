@@ -7,7 +7,7 @@ __pycache__/
 .env
 env/
 .venv
-../venv/
+venv/
 
 # Django stuff:
 local_settings.py
@@ -25,7 +25,7 @@ db.sqlite3-journal
 log/
 
 # Django migration files
-*/migrations/
+Backend/main/migrations/
 
 # PyCharm
 .idea/
