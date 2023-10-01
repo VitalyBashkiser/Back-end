@@ -11,7 +11,7 @@ venv/
 
 # Django stuff:
 local_settings.py
-Backend/db.sqlite3
+db.sqlite3
 db.sqlite3-journal
 
 # Distribution / packaging
