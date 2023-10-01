@@ -2,21 +2,23 @@ version: '3'
 
 services:
   web:
-    build: .
-    command: python manage.py runserver 127.0.0.1:8000
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh start.sh
     volumes:
-      - ./app/:/usr/src/app/
+      - ./:/Backend/
     ports:
       - 8000:8000
     env_file:
-      - .env.dev
+      - .env
 
   db:
     image: postgres
     environment:
-      POSTGRES_DB: BASE
-      POSTGRES_USER: Vitalii
-      POSTGRES_PASSWORD: 34500_R
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
 
   redis:
     image: redis

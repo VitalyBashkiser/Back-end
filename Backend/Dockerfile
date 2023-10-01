@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Use the Python image
 FROM python:3.10.13
 
@@ -13,19 +11,24 @@ ENV PYTHONUNBUFFERED 1
 # Copy requirements.txt inside the container
 COPY requirements.txt .
 
-# Upgrade pip
-RUN pip install --upgrade pip
+# Upgrade pip & install dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Install dependencies
-RUN pip install -r requirements.txt
+# Copy the .env file inside the container
+COPY .env .
 
 # Copy all other project files
-COPY ../ .
+COPY . .
 
-COPY . start.sh
+# Copy start.sh inside the container
+COPY start.sh .
 
 # Give permissions to run the script
 RUN chmod +x start.sh
 
+# Expose the port your app runs on
+EXPOSE 8000
+
 # The command to run Django
-CMD ["sh", "./start.sh"]
+CMD ["sh", "start.sh"]
