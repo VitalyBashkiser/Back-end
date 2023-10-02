@@ -1,67 +1,35 @@
-#Project name: Back-end
+BE_#2_-_Add_Dockerfile
+## Clone the repository:
 
-
-##Getting Started Guide
-
-
-###requirements
-
-To run this project, you need to have the following programs installed:
-
-- Python 3.6+
-- Django 3.2+
-
-### Installation
-
-1. Clone this repository to your local computer.
-
+```
 git clone https://github.com/VitalyBashkiser/Back-end.git
-
-
-2. Create and activate a virtual environment.
-
-python -m venv venv
-venv\Scripts\activate (Windows)
-
-
-3. Install the necessary libraries.
-
-pip install -r requirements.txt
-
-
-4. Start the Django server.
-
-python manage.py runserver
-
-5. Now you can follow the link (http://127.0.0.1:8000/) in your browser.
-
-
-##Testing
-
-python manage.py test
-
-
-##Endpoint "health check"
-
-Your project has an endpoint `/` that returns a JSON response with status 200, details "ok" and result "working".
-
-```json
-{
-  "status_code": 200,
-  "detail": "ok",
-  "result": "working"
-}
+cd Backend
 ```
 
-##Hot reload
+## Create a .env.dev file in the project root with the following content:
 
-INSTALLED_APPS = [
+```
+DEBUG=1
+SECRET_KEY=django-insecure-#ljgyud+rtesq=)+@%oar80jaq)%=+@t19mzwm4i(8jt!h#!yy
+DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+```
 
-    'django_extensions'
-    
-]
+## Make sure to replace your_secret_key with an actual Django secret key.
 
-python manage.py runserver_plus
+## Build and run the Docker container:
+
+```
+docker-compose up --build
+```
+
+This command will build the necessary Docker image and start the application.
+
+## Open your web browser and go to http://127.0.0.1:8000 to access the application.
+
+
+
+
+
 
 
 
