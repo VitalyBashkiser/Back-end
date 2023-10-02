@@ -1,6 +1,7 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+.pyc
 
 # Environments
 .env
@@ -24,7 +25,7 @@ db.sqlite3-journal
 log/
 
 # Django migration files
-*/migrations/
+Backend/main/migrations/
 
 # PyCharm
 .idea/
