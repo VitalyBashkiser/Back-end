@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .models import User
 from .serializers import UserSerializer
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
 
