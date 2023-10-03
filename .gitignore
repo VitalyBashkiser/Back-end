@@ -28,4 +28,4 @@ log/
 Backend/main/migrations/
 
 # PyCharm
-.idea/
+.idea
