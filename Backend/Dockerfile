@@ -4,6 +4,9 @@ FROM python:3.10.13
 # Set up a working directory inside the container
 WORKDIR /Backend
 
+# Install net-tools for networking utilities
+RUN apt-get update && apt-get install -y net-tools
+
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

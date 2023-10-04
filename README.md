@@ -1,30 +1,24 @@
-BE_#2_-_Add_Dockerfile
-## Clone the repository:
+BE #4 - Add Migrations
+## Set up and run migrations for your models:
+
+## Ensure you have defined your models correctly.
+## Then, run the following command to create the initial migrations:
 
 ```
-git clone https://github.com/VitalyBashkiser/Back-end.git
-cd Backend
+python manage.py makemigrations
 ```
 
-## Create a .env.dev file in the project root with the following content:
+## Next, apply the migrations::
 
 ```
-DEBUG=1
-SECRET_KEY=django-insecure-#ljgyud+rtesq=)+@%oar80jaq)%=+@t19mzwm4i(8jt!h#!yy
-DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+python manage.py migrate
 ```
 
-## Make sure to replace your_secret_key with an actual Django secret key.
-
-## Build and run the Docker container:
+## And run the Docker container:
 
 ```
-docker-compose up --build
+docker-compose up -d
 ```
-
-This command will build the necessary Docker image and start the application.
-
-## Open your web browser and go to http://127.0.0.1:8000 to access the application.
 
 
 

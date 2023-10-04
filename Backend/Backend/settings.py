@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'django_extensions'
+    'django_extensions',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -69,8 +70,8 @@ DATABASES = {
         'NAME': config('POSTGRES_DB'),
         'USER': config('POSTGRES_USER'),
         'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': 'db',  # This is the name of the service in the docker-compose file
-        'PORT': '5432',
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
     }
 }
 
