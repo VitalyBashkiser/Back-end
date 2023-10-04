@@ -10,16 +10,22 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
 
+class AuthGroup(models.Model):
+    name = models.CharField(max_length=150, unique=True)
+
+    def __str__(self):
+        return self.name
+
 class User(AbstractUser, TimeStampedModel):
     groups = models.ManyToManyField(
         Group,
-        verbose_name=('groups'),
+        verbose_name='groups',
         blank=True,
-        related_name='s1mple'
+        related_name='savage_groups'
     )
     user_permissions = models.ManyToManyField(
         Permission,
-        verbose_name=('user permissions'),
+        verbose_name='user permissions',
         blank=True,
-        related_name='flusha'
+        related_name='global_permissions'
     )

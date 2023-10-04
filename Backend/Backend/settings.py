@@ -27,7 +27,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main',
     'django_extensions',
-    'rest_framework'
+    'rest_framework',
+    'authtools'
 ]
 
 MIDDLEWARE = [
@@ -41,6 +42,37 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Backend.urls'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
 
 TEMPLATES = [
     {
@@ -72,8 +104,13 @@ DATABASES = {
         'PASSWORD': config('POSTGRES_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
-    }
+    },
+    'TEST': {
+        'CHARSET': 'utf8mb4',
+        'COLLATION': 'utf8mb4_unicode_ci',
+    },
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -105,6 +142,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+AUTH_USER_MODEL = 'authtools.User'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
