@@ -1,0 +1,21 @@
+linters = ["isort", "flake8"]
+
+[tool.ruff]
+
+exclude = [
+    ".git",
+    ".git-rewrite",
+    ".ruff_cache",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "node_modules",
+    "venv",
+]
+
+line-length = 120
+
+
+

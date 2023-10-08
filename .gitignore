@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 .pyc
+Backend/.ruff_cache
 
 # Environments
 .env
