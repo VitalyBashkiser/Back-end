@@ -1,6 +1,6 @@
 import logging
 from .pagination import CustomPageNumberPagination
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import User
@@ -15,6 +15,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [filters.OrderingFilter]
+    permission_classes = [permissions.IsAuthenticated]
     ordering_fields = ['created_at']
     pagination_class = CustomPageNumberPagination
 
