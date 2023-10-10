@@ -64,7 +64,6 @@ sqlparse==0.4.4
 toml==0.10.2
 typing_extensions==4.8.0
 tzdata==2023.3
-urllib3==2.0.6
 wcwidth==0.2.8
 Werkzeug==2.3.7
 wrapt==1.15.0
