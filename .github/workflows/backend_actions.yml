@@ -35,10 +35,10 @@ jobs:
       - name: Reinstall Dependencies
         run: pip install -r requirements.txt
 
-      - name: Use Secrets
+      - name: Set up environment variables
         run: |
-          echo "DEBUG=${{ secrets.DEBUG }}" >> $GITHUB_ENV
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "DEBUG=1" >> $GITHUB_ENV
           echo "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> $GITHUB_ENV
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> $GITHUB_ENV
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> $GITHUB_ENV
@@ -52,6 +52,7 @@ jobs:
           echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> $GITHUB_ENV
           echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> $GITHUB_ENV
+
         
 
       - name: Run Tests
