@@ -7,7 +7,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('MY_SECRET_KEY')
 DB_HOST = config('DB_HOST', default='localhost')
 DB_PORT = config('DB_PORT', default=5432, cast=int)
 
