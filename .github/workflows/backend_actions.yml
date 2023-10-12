@@ -12,12 +12,12 @@ jobs:
   test:
     runs-on: windows-latest
 
-       steps:
+    steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-       - name: Set up environment variables
-       run: |
+      - name: Set up environment variables
+        run: |
          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
          echo "DEBUG=1" >> $GITHUB_ENV
          echo "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> $GITHUB_ENV
