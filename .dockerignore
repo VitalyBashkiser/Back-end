@@ -9,3 +9,4 @@ Backend/Dockerfile
 *.pyd
 *.egg-info
 .env
+Backend/.ruff_cache

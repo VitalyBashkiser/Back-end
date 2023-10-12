@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from .utils import logger, some_function
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 class TimeStampedModel(models.Model):
