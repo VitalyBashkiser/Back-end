@@ -26,6 +26,7 @@ jobs:
           python -m pip install --upgrade pip
           pip uninstall -y urllib3 botocore
           pip install python-decouple 
+          run: pip install ruff
           pip install -r requirements.txt
 
       - name: Modify urllib3 and botocore versions
