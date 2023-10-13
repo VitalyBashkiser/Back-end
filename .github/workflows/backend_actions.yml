@@ -70,3 +70,8 @@ jobs:
         run: |
           pip install ruff
           ruff lint
+          
+      - name: Run in debug mode
+        run: |
+          set -x
+
