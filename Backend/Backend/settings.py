@@ -102,11 +102,11 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
+        'NAME': config('POSTGRES_DB', default='mydefaultvalue'),
+        'USER': config('POSTGRES_USER', default='mydefaultvalue'),
+        'PASSWORD': config('POSTGRES_PASSWORD', default='mydefaultvalue'),
+        'HOST': config('DB_HOST', default='mydefaultvalue'),
+        'PORT': config('DB_PORT', default='mydefaultvalue'),
     },
     'TEST': {
         'CHARSET': 'utf8mb4',
@@ -133,10 +133,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST = config('EMAIL_HOST', default='mydefaultvalue')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='mydefaultvalue')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='mydefaultvalue')
 EMAIL_USE_TLS = True
 
 DJOSER = {
