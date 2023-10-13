@@ -56,7 +56,7 @@ jobs:
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> $GITHUB_ENV
 
       - name: Run Tests
-        run: python Backend/manage.py test main
+        run: python Backend/manage.py tests main
 
       - name: Cache Dependencies
         uses: actions/cache@v3
