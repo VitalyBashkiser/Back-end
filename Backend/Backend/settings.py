@@ -108,8 +108,6 @@ DATABASES = {
         'NAME': config('POSTGRES_DB', default='mydefaultvalue'),
         'USER': config('POSTGRES_USER', default='mydefaultvalue'),
         'PASSWORD': config('POSTGRES_PASSWORD', default='mydefaultvalue'),
-        'HOST': config('DB_HOST', default='mydefaultvalue'),
-        'PORT': config('DB_PORT', default='mydefaultvalue'),
     },
     'TEST': {
         'CHARSET': 'utf8mb4',
