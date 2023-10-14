@@ -11,8 +11,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY', default='mydefaultvalue')
-DB_HOST = config('DB_HOST', default='localhost')
-DB_PORT = config('DB_PORT', default=5432, cast=int)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
@@ -108,6 +106,8 @@ DATABASES = {
         'NAME': config('POSTGRES_DB', default='mydefaultvalue'),
         'USER': config('POSTGRES_USER', default='mydefaultvalue'),
         'PASSWORD': config('POSTGRES_PASSWORD', default='mydefaultvalue'),
+        'HOST' = config('DB_HOST', default='localhost')
+        'PORT' = config('DB_PORT', default=5432, cast=int)
     },
     'TEST': {
         'CHARSET': 'utf8mb4',
