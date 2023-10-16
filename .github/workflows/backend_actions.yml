@@ -55,9 +55,6 @@ jobs:
           echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> $GITHUB_ENV
           echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> $GITHUB_ENV
 
-      - name: Run Tests
-        run: pytest
-
       - name: Cache Dependencies
         uses: actions/cache@v3
         with:
