@@ -42,7 +42,6 @@ packaging==23.2
 pluggy==0.13.1
 provider==0.11.0
 psycopg==3.1.12
-psycopg2==2.9.9
 psycopg2-binary==2.9.9
 py==1.11.0
 pycodestyle==2.11.0
