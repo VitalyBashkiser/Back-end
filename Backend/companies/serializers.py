@@ -2,7 +2,6 @@ from rest_framework import serializers
 from .models import Company
 from django.contrib.auth.models import User
 
-
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
@@ -13,8 +12,9 @@ class CompanySerializer(serializers.ModelSerializer):
         default=serializers.CurrentUserDefault()
     )
 
-
     def create(self, validated_data):
         owner = validated_data.pop('owner', None)
+        if owner is None:  # Added check for owner being None
+            raise serializers.ValidationError("Owner is required.")
         company = Company.objects.create(owner=owner, **validated_data)
         return company

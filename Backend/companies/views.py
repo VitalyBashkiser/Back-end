@@ -6,7 +6,6 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-
 class CompanyViewSet(viewsets.ModelViewSet):
     queryset = Company.objects.all()
     serializer_class = CompanySerializer
@@ -17,8 +16,7 @@ class CompanyViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.is_superuser:
             return Company.objects.all()
-        else:
-            return Company.objects.filter(owner=user)
+        return Company.objects.filter(owner=user)  # Removed unnecessary else
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -34,7 +32,6 @@ class CompanyViewSet(viewsets.ModelViewSet):
             instance.delete()
         else:
             raise PermissionDenied()
-
 
 @api_view(['POST'])
 def toggle_company_visibility(request, pk):
