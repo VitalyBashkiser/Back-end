@@ -1,13 +1,16 @@
 from pathlib import Path
 import os
+import sys
 from datetime import timedelta
 from decouple import config
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config('SECRET_KEY', default='mydefaultvalue')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get("DEBUG", default=0))
@@ -17,19 +20,18 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 # Application definition
 
 INSTALLED_APPS = [
+    'main',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'main',
     'django_extensions',
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
-    'companies',
 ]
 
 MIDDLEWARE = [
@@ -101,11 +103,11 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('POSTGRES_DB'),
-        'USER': config('POSTGRES_USER'),
-        'PASSWORD': config('POSTGRES_PASSWORD'),
+        'NAME': config('POSTGRES_DB', default='mydefaultvalue'),
+        'USER': config('POSTGRES_USER', default='mydefaultvalue'),
+        'PASSWORD': config('POSTGRES_PASSWORD', default='mydefaultvalue'),
         'HOST': config('DB_HOST', default='localhost'),
-        'PORT': config('DB_PORT', default=5432, cast=int)
+        'PORT': config('DB_PORT', default=5432, cast=int),
     },
     'TEST': {
         'CHARSET': 'utf8mb4',
@@ -132,10 +134,10 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST = config('EMAIL_HOST', default='mydefaultvalue')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='mydefaultvalue')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='mydefaultvalue')
 EMAIL_USE_TLS = True
 
 DJOSER = {
