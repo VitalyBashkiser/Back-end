@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 
 logger = logging.getLogger(__name__)
 
+
 # View class for performing CRUD operations
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -36,6 +37,7 @@ class UserViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
 
+
 # Function to get a user by his ID
 @api_view(['GET'])
 def get_user_by_id(request, user_id):
@@ -48,6 +50,7 @@ def get_user_by_id(request, user_id):
         logger.error("User not found")
         # Return an error if there is no user with the specified ID
         return Response({'error': 'User not found'}, status=404)
+
 
 # Function to check the system status
 def health_check(request):
