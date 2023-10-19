@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'companies',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +45,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://192.168.10.47:8080',
+    "http://localhost:8080",
 ]
 
 ROOT_URLCONF = 'Backend.urls'
