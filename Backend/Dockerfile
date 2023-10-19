@@ -12,7 +12,7 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Copy requirements.txt inside the container
-COPY ../requirements.txt .
+COPY requirements.txt .
 
 # Upgrade pip & install dependencies
 RUN pip install --upgrade pip && \
