@@ -93,3 +93,50 @@ class UserActionsTestCase(APITestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFalse(self.company.members.filter(id=self.user.id).exists())
+
+
+class AdminActionsTestCase(APITestCase):
+    def setUp(self):
+        # Create test data, including company and users
+        self.owner = User.objects.create_user(username='owner', password='test_password')
+        self.admin = User.objects.create_user(username='admin', password='test_password')
+        self.user = User.objects.create_user(username='user', password='test_password')
+        self.company = Company.objects.create(name='Test Company', owner=self.owner)
+        self.company.members.set([self.owner, self.admin, self.user])
+        self.company.admins.set([self.admin])
+
+    def test_appoint_admin(self):
+        # Authenticate as owner
+        self.client.force_authenticate(user=self.owner)
+        # Define the URL for the request
+        url = reverse('appoint_admin', args=[self.company.id, self.user.id])
+        # Send POST request
+        response = self.client.post(url)
+        # Check that the response has a status of 200
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Verify that the user is an admin
+        self.assertTrue(self.company.admins.filter(id=self.user.id).exists())
+
+    def test_remove_admin(self):
+        # Authenticate as owner
+        self.client.force_authenticate(user=self.owner)
+        # Define the URL for the request
+        url = reverse('remove_admin', args=[self.company.id, self.admin.id])
+        # Send POST request
+        response = self.client.post(url)
+        # Check that the response has a status of 200
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Verify that the administrator is no longer an admin
+        self.assertFalse(self.company.admins.filter(id=self.admin.id).exists())
+
+    def test_list_admins(self):
+        # Authenticate as owner
+        self.client.force_authenticate(user=self.owner)
+        # Define the URL for the request
+        url = reverse('list_admins', args=[self.company.id])
+        # Send GET request
+        response = self.client.get(url)
+        # Check that the response has a status of 200
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Verify that the response contains admin data
+        self.assertEqual(len(response.data), self.company.admins.count())

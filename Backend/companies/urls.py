@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import CompanyViewSet, toggle_company_visibility,\
     cancel_request, send_request, revoke_invitation,\
     decline_invitation, accept_invitation, remove_user_from_company, leave_company,\
-    send_invitations, approve_request
+    send_invitations, approve_request, remove_admin, list_admins, appoint_admin
 
 router = DefaultRouter()
 router.register(r'companies', CompanyViewSet, basename='company')
@@ -25,5 +25,8 @@ urlpatterns = [
          name='remove_user_from_company'),
     path('companies/<int:company_id>/leave/', leave_company, name='leave_company'),
     path('companies/<int:company_id>/approve_request/<int:request_id>/', approve_request, name='approve_request'),
+    path('companies/appoint_admin/<int:company_id>/<int:user_id>/', appoint_admin, name='appoint_admin'),
+    path('companies/list_admins/<int:company_id>/', list_admins, name='list_admins'),
+    path('companies/remove_admin/<int:company_id>/<int:user_id>/', remove_admin, name='remove_admin'),
 ]
 
