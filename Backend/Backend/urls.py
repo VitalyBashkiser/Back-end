@@ -9,4 +9,5 @@ urlpatterns = [
     path('auth/', include('djoser.urls.authtoken')),
     path('auth/', include('djoser.urls.jwt')),
     path('api/', include('companies.urls')),
+    path('api/', include('quizzes.urls')),
 ]
