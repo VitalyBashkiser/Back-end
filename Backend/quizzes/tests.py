@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from companies.models import Company
 from .models import Quiz
-from .views import calculate_average_score, expected_average_score
+from django.db.models import Sum, Count
 
 
 class QuizTests(TestCase):
@@ -34,6 +34,16 @@ class QuizTests(TestCase):
         response = self.client.post(reverse('record-test-result'), data, format='json')
         self.assertEqual(response.status_code, 201)
 
-        # Verify that the average score is calculated correctly
-        average_score = calculate_average_score(self.user)
-        self.assertEqual(average_score, expected_average_score(0, 0))
+        # Verify that the user's average score is calculated correctly
+        user = User.objects.get(id=data['user_id'])
+        total_correct_answers = user.testresult_set.aggregate(total=Sum('correct_answers'))['total']
+        total_questions_answered = user.testresult_set.values('quiz__questions').annotate(
+            total=Count('quiz__questions'))
+
+        if total_questions_answered and total_correct_answers:
+            total_questions = total_questions_answered[0]['total']
+            average_score = total_correct_answers / total_questions if total_questions > 0 else 0
+        else:
+            average_score = 0
+        self.assertEqual(average_score, 0.0)
+

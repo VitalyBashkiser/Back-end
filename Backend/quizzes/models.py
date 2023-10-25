@@ -34,7 +34,7 @@ class TestResult(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()
-    correct_answers = models.IntegerField(default=0)
+    correct_answers = models.IntegerField()
 
     def __str__(self):
         return f"Result for {self.user.username} in {self.quiz.title}"
