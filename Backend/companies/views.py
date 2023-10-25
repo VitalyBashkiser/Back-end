@@ -146,6 +146,7 @@ def leave_company(request, company_id):
     company.members.remove(request.user)
     return Response({'message': 'Left company successfully'}, status=status.HTTP_200_OK)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated, IsCompanyOwner])
 def appoint_admin(request, company_id, user_id):
