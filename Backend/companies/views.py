@@ -8,6 +8,8 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsCompanyOwner
 from rest_framework.permissions import IsAuthenticated
 from .models import Request, Invitation, User, Company
+from main.serializers import UserSerializer
+from .enums import RequestStatus
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -109,8 +111,8 @@ def approve_request(request, company_id, request_id):
         request_obj = get_object_or_404(Request, id=request_id, company=company, status=Request.STATUS_CHOICES[0][0])
 
         # Check if the request has already been approved
-        if request_obj.status == Request.STATUS_CHOICES[1][0]:
-            return Response({'error': 'Request already approved'}, status=status.HTTP_400_BAD_REQUEST)
+        if request_obj.status != RequestStatus.PENDING.value:
+            return Response({'error': 'Request cannot be approved'}, status=status.HTTP_400_BAD_REQUEST)
 
         request_obj.status = Request.STATUS_CHOICES[1][0]  # Assuming 'APPROVED' is the second choice
         request_obj.save()
@@ -144,3 +146,42 @@ def leave_company(request, company_id):
     company.members.remove(request.user)
     return Response({'message': 'Left company successfully'}, status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsCompanyOwner])
+def appoint_admin(request, company_id, user_id):
+    try:
+        company = get_object_or_404(Company, id=company_id)
+        user = get_object_or_404(User, id=user_id)
+        company.admins.add(user)
+        return Response({'message': 'User appointed as admin successfully'}, status=status.HTTP_200_OK)
+    except Company.DoesNotExist:
+        return Response({'error': 'Company not found'}, status=status.HTTP_404_NOT_FOUND)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsCompanyOwner])
+def remove_admin(request, company_id, user_id):
+    try:
+        company = get_object_or_404(Company, id=company_id)
+        user = get_object_or_404(User, id=user_id)
+        company.admins.remove(user)
+        return Response({'message': 'User removed from admins successfully'}, status=status.HTTP_200_OK)
+    except Company.DoesNotExist:
+        return Response({'error': 'Company not found'}, status=status.HTTP_404_NOT_FOUND)
+    except User.DoesNotExist:
+        return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated, IsCompanyOwner])
+def list_admins(request, company_id):
+    try:
+        company = get_object_or_404(Company, id=company_id)
+        admins = company.admins.all()
+        serializer = UserSerializer(admins, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Company.DoesNotExist:
+        return Response({'error': 'Company not found'}, status=status.HTTP_404_NOT_FOUND)
