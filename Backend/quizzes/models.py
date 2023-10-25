@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from companies.models import Company
 
 
 class Quiz(models.Model):
@@ -25,3 +27,24 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.answer_text
+
+
+class TestResult(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.IntegerField()
+
+    def __str__(self):
+        return f"Result for {self.user.username} in {self.quiz.title}"
+
+
+class LastTestTime(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    last_test_time = models.DateTimeField()
+
+    def __str__(self):
+        return f"Last test time for {self.user.username} in {self.quiz.title}"
+
+

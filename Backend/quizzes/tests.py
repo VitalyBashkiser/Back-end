@@ -1,25 +1,22 @@
-from rest_framework.test import APITestCase
-from .models import Question, Quiz
+from django.test import TestCase
 from django.urls import reverse
+import random
 
 
-class QuestionTests(APITestCase):
-    def test_create_question_with_selected_answers(self):
-        quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+class QuizTests(TestCase):
 
-        url = reverse('create_question_with_selected_answers')
+    def test_start_quiz(self):
+        response = self.client.post(reverse('start-quiz', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Quiz started successfully")
+
+    def test_record_test_result(self):
         data = {
-            "quiz": quiz.id,
-            "question_text": "What is the capital of France?",
-            "answers": [
-                {"answer_text": "Paris", "is_correct": True},
-                {"answer_text": "London", "is_correct": False},
-                {"answer_text": "Berlin", "is_correct": False}
-            ]
+            'user_id': 1,
+            'company_id': 1,
+            'quiz_id': 1,
+            'score': random.randint(0, 100)
         }
-        response = self.client.post(url, data, format='json')
+
+        response = self.client.post(reverse('record-test-result'), data, format='json')
         self.assertEqual(response.status_code, 201)
-        question = Question.objects.get(id=response.data['id'])
-        self.assertEqual(question.text, "What is the capital of France?")
-        self.assertEqual(question.selected_answers.count(), 1)
-        self.assertEqual(question.selected_answers.first().text, "Paris")
