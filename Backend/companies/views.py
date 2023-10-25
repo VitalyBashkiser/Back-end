@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from .permissions import IsCompanyOwner
 from rest_framework.permissions import IsAuthenticated
 from .models import Request, Invitation, User, Company
+from .enums import RequestStatus
 
 
 class CompanyViewSet(viewsets.ModelViewSet):
@@ -109,8 +110,8 @@ def approve_request(request, company_id, request_id):
         request_obj = get_object_or_404(Request, id=request_id, company=company, status=Request.STATUS_CHOICES[0][0])
 
         # Check if the request has already been approved
-        if request_obj.status == Request.STATUS_CHOICES[1][0]:
-            return Response({'error': 'Request already approved'}, status=status.HTTP_400_BAD_REQUEST)
+        if request_obj.status != RequestStatus.PENDING.value:
+            return Response({'error': 'Request cannot be approved'}, status=status.HTTP_400_BAD_REQUEST)
 
         request_obj.status = Request.STATUS_CHOICES[1][0]  # Assuming 'APPROVED' is the second choice
         request_obj.save()
