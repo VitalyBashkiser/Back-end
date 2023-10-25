@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from main.models import TimeStampedModel
+from .enums import RequestStatus
 
 
 class Company(TimeStampedModel):
@@ -29,11 +30,7 @@ class Invitation(TimeStampedModel):
 class Request(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('APPROVED', 'Approved'),
-        ('REJECTED', 'Rejected')
-    ]
+    STATUS_CHOICES = [(status.value, status.name) for status in RequestStatus]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='PENDING')
 
     def __str__(self):
