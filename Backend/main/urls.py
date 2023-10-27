@@ -7,6 +7,6 @@ router.register(r'users', views.UserViewSet, basename='user')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('users/<int:user_id>/', views.get_user_by_id, name='get_user_by_id'),
-    path('health_check/', views.health_check, name='health_check'),
+    path('main/users/<int:user_id>/', views.get_user_by_id, name='get_user_by_id'),
+    path('main/health_check/', views.health_check, name='health_check'),
 ]
