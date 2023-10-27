@@ -10,6 +10,7 @@ class Company(TimeStampedModel):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owned_companies')
     is_visible = models.BooleanField(default=True)
     members = models.ManyToManyField(User, related_name='companies')
+    admins = models.ManyToManyField(User, related_name='administered_companies', blank=True)
 
     class Meta:
         verbose_name_plural = "Companies"
