@@ -1,4 +1,6 @@
 import logging
+import csv
+import json
 from rest_framework import generics
 from .models import Quiz, TestResult
 from .serializers import QuizSerializer, QuestionSerializer
@@ -9,7 +11,9 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.db.models import Sum, Count
+from django.contrib.auth.decorators import login_required
 from companies.models import Company
+from django.http import JsonResponse, HttpResponse
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +27,23 @@ class QuizListView(generics.ListCreateAPIView):
 class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+
+
+def export_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Column1', 'Column2', 'Column3'])
+
+    return response
+
+
+def export_json(request):
+    data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'}
+    response = HttpResponse(json.dumps(data), content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="data.json"'
+    return response
 
 
 @api_view(['POST'])
@@ -91,3 +112,22 @@ def calculate_average_score(request):
         return Response({'average_score': average_score}, status=status.HTTP_200_OK)
     else:
         return Response({'average_score': 0}, status=status.HTTP_200_OK)
+
+
+@login_required
+def export_data(request, format):
+    user = request.user
+    if format == 'json':
+        data = TestResult.objects.filter(user=user).values()
+        return JsonResponse(list(data), safe=False)
+    elif format == 'csv' and (user.is_owner or user.is_administrator):
+        data = TestResult.objects.filter(company=user.company)
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="quiz_results.csv"'
+        writer = csv.writer(response)
+        writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
+        for result in data:
+            writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score, result.date_passed])
+        return response
+    else:
+        return HttpResponse("Permission denied", status=403)

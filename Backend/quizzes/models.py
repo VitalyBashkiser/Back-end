@@ -6,7 +6,7 @@ from companies.models import Company
 class Quiz(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    frequency = models.PositiveIntegerField()  # Number indicating the frequency of taking the quiz in days
+    frequency = models.IntegerField(default=0)  # Number indicating the frequency of taking the quiz in days
 
     def __str__(self):
         return self.title
