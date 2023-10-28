@@ -127,7 +127,8 @@ def export_data(request, format):
         writer = csv.writer(response)
         writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
         for result in data:
-            writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score, result.date_passed])
+            writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
+                             result.date_passed])
         return response
     else:
         return HttpResponse("Permission denied", status=403)
