@@ -1,0 +1,26 @@
+[
+    {
+        "id": 403,
+        "user": "test_user",
+        "company": "test_company",
+        "quiz": "test_quiz",
+        "score": 60,
+        "date passed": "2023-10-29 18:30:29"
+    },
+    {
+        "id": 404,
+        "user": "company_admin",
+        "company": "test_company",
+        "quiz": "test_quiz",
+        "score": 70,
+        "date passed": "2023-10-29 18:30:29"
+    },
+    {
+        "id": 405,
+        "user": "company_owner",
+        "company": "test_company",
+        "quiz": "test_quiz",
+        "score": 80,
+        "date passed": "2023-10-29 18:30:29"
+    }
+]

@@ -2,7 +2,7 @@ import logging
 import csv
 import json
 from rest_framework import generics
-from .models import Quiz, TestResult
+from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
 from main.pagination import CustomPageNumberPagination
 from rest_framework.decorators import api_view
@@ -14,6 +14,8 @@ from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required
 from companies.models import Company
 from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+
 
 logger = logging.getLogger(__name__)
 
@@ -29,19 +31,37 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
 
 
+@csrf_exempt
 def export_csv(request):
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(['Column1', 'Column2', 'Column3'])
+    writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
+
+    for result in TestResult.objects.all():
+        writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
+                         result.date_passed.strftime("%Y-%m-%d %H:%M:%S")])
 
     return response
 
 
+@csrf_exempt
 def export_json(request):
-    data = {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'}
-    response = HttpResponse(json.dumps(data), content_type='application/json')
+    quiz_results = []
+    for result in TestResult.objects.all():
+        quiz_results.append({
+            'id': result.id,
+            'user': result.user.username,
+            'company': result.company.name,
+            'quiz': result.quiz.title,
+            'score': result.score,
+            'date passed': result.date_passed.strftime("%Y-%m-%d %H:%M:%S")
+        })
+
+    json_data = json.dumps(quiz_results, indent=4)
+
+    response = HttpResponse(json_data, content_type='application/json')
     response['Content-Disposition'] = 'attachment; filename="data.json"'
     return response
 
@@ -51,9 +71,18 @@ def create_question_with_selected_answers(request):
     serializer = QuestionSerializer(data=request.data)
     if serializer.is_valid():
         question = serializer.save()
+
+        # Extract and create associated answers
+        answers_data = request.data.get('answers', [])
+        for answer_data in answers_data:
+            Answer.objects.create(
+                question=question,  # This should be the actual question object
+                answer_text=answer_data['answer_text'],
+                is_correct=answer_data['is_correct']
+            )
+
         return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

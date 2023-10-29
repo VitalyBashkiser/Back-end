@@ -1,12 +1,87 @@
 import random
 import csv
+import os
+import json
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from companies.models import Company
-from .models import Quiz, TestResult
+from .models import Quiz, TestResult, Question
 from django.db.models import Sum, Count
-from django.http import HttpResponse
+from rest_framework.test import APITestCase
+from datetime import datetime
+
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+class QuestionTests(APITestCase):
+    def test_create_question_with_selected_answers(self):
+        quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+
+        url = reverse('create_question_with_selected_answers')
+        data = {
+            "quiz": quiz.id,
+            "question_text": "What is the capital of France?",
+            "answers": [
+                {"answer_text": "Paris", "is_correct": True},
+                {"answer_text": "London", "is_correct": False},
+                {"answer_text": "Berlin", "is_correct": False}
+            ]
+        }
+        response = self.client.post(url, data, format='json')
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+        question = Question.objects.get(id=response.data['id'])
+        self.assertEqual(question.question_text, "What is the capital of France?")
+        self.assertEqual(question.answers.count(), 3)
+        self.assertTrue(question.answers.filter(answer_text="Paris", is_correct=True).exists())
+
+
+class QuestionTests2(APITestCase):
+    def test_create_question_with_selected_answers(self):
+        quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+
+        url = reverse('create_question_with_selected_answers')
+        data = {
+            "quiz": quiz.id,
+            "question_text": "What is the largest mammal on Earth?",
+            "answers": [
+                {"answer_text": "Elephant", "is_correct": False},
+                {"answer_text": "Blue Whale", "is_correct": True},
+                {"answer_text": "Giraffe", "is_correct": False}
+            ]
+        }
+        response = self.client.post(url, data, format='json')
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+        question = Question.objects.get(id=response.data['id'])
+        self.assertEqual(question.question_text, "What is the largest mammal on Earth?")
+        self.assertEqual(question.answers.count(), 3)
+        self.assertTrue(question.answers.filter(answer_text="Blue Whale", is_correct=True).exists())
+
+
+class QuestionTests3(APITestCase):
+        def test_create_question_with_selected_answers(self):
+            quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+
+            url = reverse('create_question_with_selected_answers')
+            data = {
+                "quiz": quiz.id,
+                "question_text": "What is the capital of Japan?",
+                "answers": [
+                    {"answer_text": "Tokyo", "is_correct": False},
+                    {"answer_text": "Beijing", "is_correct": True},
+                    {"answer_text": "Seoul", "is_correct": False}
+                ]
+            }
+            response = self.client.post(url, data, format='json')
+            print(response.data)
+            self.assertEqual(response.status_code, 201)
+            question = Question.objects.get(id=response.data['id'])
+            self.assertEqual(question.question_text, "What is the capital of Japan?")
+            self.assertEqual(question.answers.count(), 3)
+            self.assertTrue(question.answers.filter(answer_text="Beijing", is_correct=True).exists())
 
 
 class QuizTests(TestCase):
@@ -86,21 +161,46 @@ class ExportDataTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
         self.assertIn('attachment; filename="data.json"', response['Content-Disposition'])
-        self.assertJSONEqual(str(response.content, encoding='utf8'),
-                             {'key1': 'value1', 'key2': 'value2', 'key3': 'value3'})
+
+        # Verify the structure and content of the JSON
+        json_data = response.json()
+
+        for idx, result in enumerate(TestResult.objects.all()):
+            expected_data = {
+                'id': result.id,
+                'user': result.user.username,
+                'company': result.company.name,
+                'quiz': result.quiz.title,
+                'score': result.score,
+                'date passed': result.date_passed.strftime("%Y-%m-%d %H:%M:%S")
+            }
+            self.assertEqual(json_data[idx], expected_data)
+
+        # Save the JSON data to a file
+        json_file_path = os.path.join(BASE_DIR, 'quizzes', 'data.json')
+        with open(json_file_path, 'w') as json_file:
+            json.dump(json_data, json_file, indent=4)
 
     def test_export_csv(self):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="data.csv"'
+        response = self.client.get(reverse('export-csv'))
 
-        writer = csv.writer(response)
-        writer.writerow(['id', 'user', 'company', 'quiz', 'score'])
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'text/csv')
+        self.assertIn('attachment; filename="data.csv"', response['Content-Disposition'])
 
-        test_results = TestResult.objects.all()
+        # Path to save the CSV file
+        file_path = os.path.join(BASE_DIR, 'quizzes', 'data.csv')
 
-        for result in test_results:
-            writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score])
+        with open(file_path, 'w', newline='', encoding='utf-8') as f:
+            # Write header row
+            writer = csv.writer(f)
+            writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
 
-        return response
+            # Write data rows
+            for result in TestResult.objects.all():
+                writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
+                                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
 
+        # Check if the file exists
+        self.assertTrue(os.path.exists(file_path))
 
