@@ -1,6 +1,6 @@
 import logging
 from rest_framework import generics
-from .models import Quiz, TestResult
+from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
 from main.pagination import CustomPageNumberPagination
 from rest_framework.decorators import api_view
@@ -30,9 +30,18 @@ def create_question_with_selected_answers(request):
     serializer = QuestionSerializer(data=request.data)
     if serializer.is_valid():
         question = serializer.save()
+
+        # Extract and create associated answers
+        answers_data = request.data.get('answers', [])
+        for answer_data in answers_data:
+            Answer.objects.create(
+                question=question,  # This should be the actual question object
+                answer_text=answer_data['answer_text'],
+                is_correct=answer_data['is_correct']
+            )
+
         return Response(QuestionSerializer(question).data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -43,11 +52,21 @@ def start_quiz(request, quiz_id):
 
 @api_view(['POST'])
 def record_test_result(request):
+    def some_function():
+        logger.debug("This is a debug message")
+
+    some_function()
+
+    logger.debug(f"Received data: {request.data}")
+
     user_id = request.data.get('user_id')
     company_id = request.data.get('company_id')
     quiz_id = request.data.get('quiz_id')
     score = request.data.get('score')
     correct_answers = request.data.get('correct_answers')
+
+    logger.debug(
+        f"User ID: {user_id}, Company ID: {company_id}, Quiz ID: {quiz_id}, Score: {score}, Correct Answers: {correct_answers}")
 
     try:
         user = User.objects.get(id=user_id)
