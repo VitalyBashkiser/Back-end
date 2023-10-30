@@ -66,7 +66,8 @@ def record_test_result(request):
     correct_answers = request.data.get('correct_answers')
 
     logger.debug(
-        f"User ID: {user_id}, Company ID: {company_id}, Quiz ID: {quiz_id}, Score: {score}, Correct Answers: {correct_answers}")
+        f"User ID: {user_id}, Company ID: {company_id}, Quiz ID: {quiz_id}, Score: {score}, Correct Answers:"
+        f" {correct_answers}")
 
     try:
         user = User.objects.get(id=user_id)
