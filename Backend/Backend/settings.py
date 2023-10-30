@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'companies',
     'corsheaders',
     'quizzes',
+    'analytics',
 ]
 
 MIDDLEWARE = [

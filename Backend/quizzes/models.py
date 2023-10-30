@@ -37,7 +37,7 @@ class TestResult(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()
     correct_answers = models.IntegerField()
-    date_passed = models.DateTimeField(default=datetime.now)
+    date_passed = models.DateTimeField(default=datetime.now, blank=True, null=True)
 
     def __str__(self):
         return f"Result for {self.user.username} in {self.quiz.title}"

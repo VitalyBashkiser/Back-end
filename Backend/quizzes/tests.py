@@ -2,6 +2,7 @@ import random
 import csv
 import os
 import json
+from datetime import datetime
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -9,7 +10,7 @@ from companies.models import Company
 from .models import Quiz, TestResult, Question
 from django.db.models import Sum, Count
 from rest_framework.test import APITestCase
-from datetime import datetime
+from django.utils import timezone
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -62,26 +63,26 @@ class QuestionTests2(APITestCase):
 
 
 class QuestionTests3(APITestCase):
-        def test_create_question_with_selected_answers(self):
-            quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+    def test_create_question_with_selected_answers(self):
+        quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
 
-            url = reverse('create_question_with_selected_answers')
-            data = {
-                "quiz": quiz.id,
-                "question_text": "What is the capital of Japan?",
-                "answers": [
-                    {"answer_text": "Tokyo", "is_correct": False},
-                    {"answer_text": "Beijing", "is_correct": True},
-                    {"answer_text": "Seoul", "is_correct": False}
-                ]
-            }
-            response = self.client.post(url, data, format='json')
-            print(response.data)
-            self.assertEqual(response.status_code, 201)
-            question = Question.objects.get(id=response.data['id'])
-            self.assertEqual(question.question_text, "What is the capital of Japan?")
-            self.assertEqual(question.answers.count(), 3)
-            self.assertTrue(question.answers.filter(answer_text="Beijing", is_correct=True).exists())
+        url = reverse('create_question_with_selected_answers')
+        data = {
+            "quiz": quiz.id,
+            "question_text": "What is the capital of Japan?",
+            "answers": [
+                {"answer_text": "Tokyo", "is_correct": False},
+                {"answer_text": "Beijing", "is_correct": True},
+                {"answer_text": "Seoul", "is_correct": False}
+            ]
+        }
+        response = self.client.post(url, data, format='json')
+        print(response.data)
+        self.assertEqual(response.status_code, 201)
+        question = Question.objects.get(id=response.data['id'])
+        self.assertEqual(question.question_text, "What is the capital of Japan?")
+        self.assertEqual(question.answers.count(), 3)
+        self.assertTrue(question.answers.filter(answer_text="Beijing", is_correct=True).exists())
 
 
 class QuizTests(TestCase):
@@ -109,24 +110,18 @@ class QuizTests(TestCase):
             'company_id': self.company.id,
             'quiz_id': self.quiz.id,
             'score': random.randint(0, 100),
-            'correct_answers': random.randint(0, 10)  # Simulated correct answers
+            'correct_answers': random.randint(0, 10),  # Simulated correct answers
+            'date_passed': timezone.now()
         }
 
         response = self.client.post(reverse('record-test-result'), data, format='json')
         self.assertEqual(response.status_code, 201)
 
-        # Verify that the user's average score is calculated correctly
-        user = User.objects.get(id=data['user_id'])
-        total_correct_answers = user.testresult_set.aggregate(total=Sum('correct_answers'))['total']
-        total_questions_answered = user.testresult_set.values('quiz__questions').annotate(
-            total=Count('quiz__questions'))
-
-        if total_questions_answered and total_correct_answers:
-            total_questions = total_questions_answered[0]['total']
-            average_score = total_correct_answers / total_questions if total_questions > 0 else 0
-        else:
-            average_score = 0
-        self.assertEqual(average_score, 0.0)
+        # Verify that the record about the passed test was saved to the database
+        test_result = TestResult.objects.get(user=self.user, quiz=self.quiz)
+        self.assertEqual(test_result.date_passed.replace(microsecond=0), data['date_passed'].replace(microsecond=0))
+        self.assertEqual(test_result.score, data['score'])
+        self.assertEqual(test_result.correct_answers, data['correct_answers'])
 
 
 class ExportDataTest(TestCase):

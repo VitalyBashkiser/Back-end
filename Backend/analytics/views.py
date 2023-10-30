@@ -1,7 +1,8 @@
 from .permissions import IsCompanyAdminOrOwner
 from rest_framework import generics, permissions
 from .models import Rating, QuizCompletion, AverageScores
-from .serializers import RatingSerializer, QuizCompletionSerializer, AverageScoresSerializer
+from .serializers import RatingSerializer, QuizCompletionSerializer, AverageScoresSerializer,\
+    CompanyUsersLastTestSerializer
 from companies.models import Company, User
 from main.models import User
 
