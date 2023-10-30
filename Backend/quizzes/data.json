@@ -1,26 +1,26 @@
 [
     {
-        "id": 403,
+        "id": 445,
         "user": "test_user",
         "company": "test_company",
         "quiz": "test_quiz",
         "score": 60,
-        "date passed": "2023-10-29 18:30:29"
+        "date passed": "2023-10-30 19:55:03"
     },
     {
-        "id": 404,
+        "id": 446,
         "user": "company_admin",
         "company": "test_company",
         "quiz": "test_quiz",
         "score": 70,
-        "date passed": "2023-10-29 18:30:29"
+        "date passed": "2023-10-30 19:55:03"
     },
     {
-        "id": 405,
+        "id": 447,
         "user": "company_owner",
         "company": "test_company",
         "quiz": "test_quiz",
         "score": 80,
-        "date passed": "2023-10-29 18:30:29"
+        "date passed": "2023-10-30 19:55:03"
     }
 ]

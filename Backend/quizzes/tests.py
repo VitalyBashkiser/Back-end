@@ -6,10 +6,9 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from companies.models import Company
-from .models import Quiz, TestResult, Question
+from .models import Quiz, TestResult, Question, datetime
 from django.db.models import Sum, Count
 from rest_framework.test import APITestCase
-from datetime import datetime
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -109,7 +108,8 @@ class QuizTests(TestCase):
             'company_id': self.company.id,
             'quiz_id': self.quiz.id,
             'score': random.randint(0, 100),
-            'correct_answers': random.randint(0, 10)  # Simulated correct answers
+            'correct_answers': random.randint(0, 10),  # Simulated correct answers
+            'date_passed': datetime.datetime.now()
         }
 
         response = self.client.post(reverse('record-test-result'), data, format='json')
@@ -199,7 +199,7 @@ class ExportDataTest(TestCase):
             # Write data rows
             for result in TestResult.objects.all():
                 writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
-                                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
+                                 datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
 
         # Check if the file exists
         self.assertTrue(os.path.exists(file_path))
