@@ -61,6 +61,7 @@ class QuestionTests2(APITestCase):
 
 
 class QuestionTests3(APITestCase):
+
     def test_create_question_with_selected_answers(self):
         quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
 
@@ -203,4 +204,26 @@ class ExportDataTest(TestCase):
 
         # Check if the file exists
         self.assertTrue(os.path.exists(file_path))
+
+        def test_create_question_with_selected_answers(self):
+            quiz = Quiz.objects.create(title='Test Quiz', description='Description', frequency=7)
+
+            url = reverse('create_question_with_selected_answers')
+            data = {
+                "quiz": quiz.id,
+                "question_text": "What is the capital of Japan?",
+                "answers": [
+                    {"answer_text": "Tokyo", "is_correct": False},
+                    {"answer_text": "Beijing", "is_correct": True},
+                    {"answer_text": "Seoul", "is_correct": False}
+                ]
+            }
+            response = self.client.post(url, data, format='json')
+            print(response.data)
+            self.assertEqual(response.status_code, 201)
+            question = Question.objects.get(id=response.data['id'])
+            self.assertEqual(question.question_text, "What is the capital of Japan?")
+            self.assertEqual(question.answers.count(), 3)
+            self.assertTrue(question.answers.filter(answer_text="Beijing", is_correct=True).exists())
+
 

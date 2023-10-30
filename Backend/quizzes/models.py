@@ -23,6 +23,7 @@ class Question(models.Model):
 
 
 class Answer(models.Model):
+
     question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
     answer_text = models.CharField(max_length=255)
     is_correct = models.BooleanField()
@@ -50,5 +51,6 @@ class LastTestTime(models.Model):
 
     def __str__(self):
         return f"Last test time for {self.user.username} in {self.quiz.title}"
+
 
 
