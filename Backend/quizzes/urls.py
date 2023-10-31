@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import QuizListView, QuizDetailView, start_quiz, record_test_result, create_question_with_selected_answers
+from .views import QuizListView, QuizDetailView, start_quiz, create_result, create_question_with_selected_answers
 
 urlpatterns = [
     path('quizzes/', QuizListView.as_view(), name='quiz-list'),
@@ -7,5 +7,5 @@ urlpatterns = [
     path('quizzes/create_question/', create_question_with_selected_answers,
          name='create_question_with_selected_answers'),
     path('quizzes/start-quiz/<int:quiz_id>/', start_quiz, name='start-quiz'),
-    path('quizzes/record-test-result/', record_test_result, name='record-test-result'),
+    path('quizzes/create_result/', create_result, name='create_result'),
 ]

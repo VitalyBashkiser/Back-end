@@ -1,7 +1,7 @@
 from django.db import models
+from django.utils import timezone
 from django.contrib.auth.models import User
 from companies.models import Company
-import datetime
 
 
 class Quiz(models.Model):
@@ -36,7 +36,7 @@ class TestResult(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()
     correct_answers = models.IntegerField()
-    date_passed = models.DateTimeField(default=datetime.datetime.now)
+    date_passed = models.DateTimeField(default=timezone.now, blank=True, null=True)
 
     def __str__(self):
         return f"Result for {self.user.username} in {self.quiz.title}"

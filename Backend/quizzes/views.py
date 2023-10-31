@@ -1,4 +1,3 @@
-import logging
 from rest_framework import generics
 from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
@@ -8,10 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from django.db.models import Sum, Count
 from companies.models import Company
-
-logger = logging.getLogger(__name__)
 
 
 class QuizListView(generics.ListCreateAPIView):
@@ -35,7 +31,7 @@ def create_question_with_selected_answers(request):
         answers_data = request.data.get('answers', [])
         for answer_data in answers_data:
             Answer.objects.create(
-                question=question,  # This should be the actual question object
+                question=question,
                 answer_text=answer_data['answer_text'],
                 is_correct=answer_data['is_correct']
             )
@@ -51,23 +47,14 @@ def start_quiz(request, quiz_id):
 
 
 @api_view(['POST'])
-def record_test_result(request):
-    def some_function():
-        logger.debug("This is a debug message")
-
-    some_function()
-
-    logger.debug(f"Received data: {request.data}")
-
+def create_result(request):
     user_id = request.data.get('user_id')
     company_id = request.data.get('company_id')
     quiz_id = request.data.get('quiz_id')
     score = request.data.get('score')
     correct_answers = request.data.get('correct_answers')
 
-    logger.debug(
-        f"User ID: {user_id}, Company ID: {company_id}, Quiz ID: {quiz_id}, Score: {score}, Correct Answers:"
-        f" {correct_answers}")
+    print(f'user_id: {user_id}, company_id: {company_id}, quiz_id: {quiz_id}, score: {score}, correct_answers: {correct_answers}')
 
     try:
         user = User.objects.get(id=user_id)
@@ -88,10 +75,10 @@ def record_test_result(request):
             score=score,
             correct_answers=correct_answers
         )
+        return Response({'message': 'Test result successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
+        print(f'Error: {e}')
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-    return Response({'message': 'Test result recorded successfully'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])

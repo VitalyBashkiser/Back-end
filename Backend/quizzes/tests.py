@@ -1,11 +1,11 @@
 import random
 from rest_framework.test import APITestCase
-from .models import Question, Quiz, datetime
+from .models import Question, Quiz, TestResult
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth.models import User
 from companies.models import Company
-from django.db.models import Sum, Count
+from django.utils import timezone
 
 
 class QuestionTests(APITestCase):
@@ -92,7 +92,7 @@ class QuizTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Quiz started successfully")
 
-    def test_record_test_result(self):
+    def test_create_result(self):
         # Create a quiz with frequency
         self.quiz = Quiz.objects.create(title='Test Quiz', description='Test Description', frequency=7)
 
@@ -102,21 +102,15 @@ class QuizTests(TestCase):
             'company_id': self.company.id,
             'quiz_id': self.quiz.id,
             'score': random.randint(0, 100),
-            'correct_answers': random.randint(0, 10),  # Simulated correct answers
-            'date_passed': datetime.datetime.now()
+            'correct_answers': 1,
+            'date_passed': timezone.now()
         }
-        response = self.client.post(reverse('record-test-result'), data, format='json')
+
+        response = self.client.post(reverse('create_result'), data, format='json')
         self.assertEqual(response.status_code, 201)
 
-        # Verify that the user's average score is calculated correctly
-        user = User.objects.get(id=data['user_id'])
-        total_correct_answers = user.testresult_set.aggregate(total=Sum('correct_answers'))['total']
-        total_questions_answered = user.testresult_set.values('quiz__questions').annotate(
-            total=Count('quiz__questions'))
-
-        if total_questions_answered and total_correct_answers:
-            total_questions = total_questions_answered[0]['total']
-            average_score = total_correct_answers / total_questions if total_questions > 0 else 0
-        else:
-            average_score = 0
-        self.assertEqual(average_score, 0.0)
+        # Verify that the record about the passed test was saved to the database
+        test_result = TestResult.objects.get(user=self.user, quiz=self.quiz)
+        self.assertEqual(test_result.date_passed.replace(microsecond=0), data['date_passed'].replace(microsecond=0))
+        self.assertEqual(test_result.score, data['score'])
+        self.assertEqual(test_result.correct_answers, data['correct_answers'])
