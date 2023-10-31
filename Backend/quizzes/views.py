@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from companies.models import Company
+from django.db.models import Sum, Count
 
 
 class QuizListView(generics.ListCreateAPIView):
@@ -54,7 +55,8 @@ def create_result(request):
     score = request.data.get('score')
     correct_answers = request.data.get('correct_answers')
 
-    print(f'user_id: {user_id}, company_id: {company_id}, quiz_id: {quiz_id}, score: {score}, correct_answers: {correct_answers}')
+    print(f'user_id: {user_id}, company_id: {company_id}, quiz_id: {quiz_id}, score: {score}, correct_answers:'
+          f' {correct_answers}')
 
     try:
         user = User.objects.get(id=user_id)
