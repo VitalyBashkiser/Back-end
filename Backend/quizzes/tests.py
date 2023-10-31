@@ -8,7 +8,6 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from companies.models import Company
 from .models import Quiz, TestResult, Question
-from django.db.models import Sum, Count
 from rest_framework.test import APITestCase
 from django.utils import timezone
 
