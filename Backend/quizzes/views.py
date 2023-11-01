@@ -92,7 +92,7 @@ def start_quiz(request, quiz_id):
 
 
 @api_view(['POST'])
-def record_test_result(request):
+def create_result(request):
     user_id = request.data.get('user_id')
     company_id = request.data.get('company_id')
     quiz_id = request.data.get('quiz_id')

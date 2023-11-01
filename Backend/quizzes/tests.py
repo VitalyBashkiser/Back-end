@@ -2,7 +2,6 @@ import random
 import csv
 import os
 import json
-from datetime import datetime
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -99,7 +98,7 @@ class QuizTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Quiz started successfully")
 
-    def test_record_test_result(self):
+    def test_create_result(self):
         # Create a quiz with frequency
         self.quiz = Quiz.objects.create(title='Test Quiz', description='Test Description', frequency=7)
 
@@ -113,7 +112,7 @@ class QuizTests(TestCase):
             'date_passed': timezone.now()
         }
 
-        response = self.client.post(reverse('record-test-result'), data, format='json')
+        response = self.client.post(reverse('create_result'), data, format='json')
         self.assertEqual(response.status_code, 201)
 
         # Verify that the record about the passed test was saved to the database
@@ -193,7 +192,7 @@ class ExportDataTest(TestCase):
             # Write data rows
             for result in TestResult.objects.all():
                 writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
-                                 datetime.now().strftime("%Y-%m-%d %H:%M:%S")])
+                                 timezone.now().strftime("%Y-%m-%d %H:%M:%S")])
 
         # Check if the file exists
         self.assertTrue(os.path.exists(file_path))

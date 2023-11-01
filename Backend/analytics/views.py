@@ -15,7 +15,7 @@ class RatingListView(generics.ListAPIView):
 class QuizCompletionListView(generics.ListAPIView):
     queryset = QuizCompletion.objects.all()
     serializer_class = QuizCompletionSerializer
-    permission_classes = [permissions.IsAuthenticated & IsCompanyAdminOrOwner]
+    permission_classes = []
 
 
 class AverageScoresListView(generics.ListAPIView):

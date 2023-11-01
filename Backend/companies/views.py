@@ -151,7 +151,7 @@ def leave_company(request, company_id):
 @permission_classes([IsAuthenticated, IsCompanyOwner])
 def appoint_admin(request, company_id, user_id):
     try:
-        company = get_object_or_404(Company, id=company_id)
+        company = get_object_or_404(Company.objects.prefetch_related('admins'), id=company_id)
         user = get_object_or_404(User, id=user_id)
         company.admins.add(user)
         return Response({'message': 'User appointed as admin successfully'}, status=status.HTTP_200_OK)
@@ -165,7 +165,7 @@ def appoint_admin(request, company_id, user_id):
 @permission_classes([IsAuthenticated, IsCompanyOwner])
 def remove_admin(request, company_id, user_id):
     try:
-        company = get_object_or_404(Company, id=company_id)
+        company = get_object_or_404(Company.objects.prefetch_related('admins'), id=company_id)
         user = get_object_or_404(User, id=user_id)
         company.admins.remove(user)
         return Response({'message': 'User removed from admins successfully'}, status=status.HTTP_200_OK)
@@ -179,7 +179,7 @@ def remove_admin(request, company_id, user_id):
 @permission_classes([IsAuthenticated, IsCompanyOwner])
 def list_admins(request, company_id):
     try:
-        company = get_object_or_404(Company, id=company_id)
+        company = get_object_or_404(Company.objects.prefetch_related('admins'), id=company_id)
         admins = company.admins.all()
         serializer = UserSerializer(admins, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
