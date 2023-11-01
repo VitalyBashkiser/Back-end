@@ -3,7 +3,7 @@ from rest_framework import generics, permissions
 from .models import Rating, QuizCompletion, AverageScores
 from .serializers import RatingSerializer, QuizCompletionSerializer, AverageScoresSerializer,\
     CompanyUsersLastTestSerializer
-from companies.models import Company, User
+from companies.models import Company
 from main.models import User
 
 
@@ -15,7 +15,7 @@ class RatingListView(generics.ListAPIView):
 class QuizCompletionListView(generics.ListAPIView):
     queryset = QuizCompletion.objects.all()
     serializer_class = QuizCompletionSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated & IsCompanyAdminOrOwner]
 
 
 class AverageScoresListView(generics.ListAPIView):
