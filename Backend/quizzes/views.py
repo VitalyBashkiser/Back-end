@@ -1,6 +1,5 @@
 import logging
 import csv
-import json
 from rest_framework import generics
 from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
@@ -14,7 +13,6 @@ from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required
 from companies.models import Company
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 
 
 logger = logging.getLogger(__name__)
@@ -35,9 +33,10 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
 def export_data(request, format):
     user = request.user
     if format == 'json':
-        data = TestResult.objects.filter(user=user).values()
+        data = TestResult.objects.filter(user=user).values('id', 'user__username', 'company__name', 'quiz__title',
+                                                           'score', 'correct_answers', 'date_passed')
         return JsonResponse(list(data), safe=False)
-    elif format == 'csv' and (user.is_owner or user.is_administrator):
+    if format == 'csv':
         return export_csv(request)
     else:
         return HttpResponse("Permission denied", status=403)
@@ -56,26 +55,6 @@ def export_csv(request):
     for result in data:
         writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
                          result.date_passed])
-    return response
-
-
-@csrf_exempt
-def export_json(request):
-    quiz_results = []
-    for result in TestResult.objects.all():
-        quiz_results.append({
-            'id': result.id,
-            'user': result.user.username,
-            'company': result.company.name,
-            'quiz': result.quiz.title,
-            'score': result.score,
-            'date passed': result.date_passed.strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-    json_data = json.dumps(quiz_results, indent=4)
-
-    response = HttpResponse(json_data, content_type='application/json')
-    response['Content-Disposition'] = 'attachment; filename="data.json"'
     return response
 
 

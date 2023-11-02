@@ -39,7 +39,7 @@ class TestResult(models.Model):
     date_passed = models.DateTimeField(default=timezone.now, blank=True, null=True)
 
     def __str__(self):
-        return f"Result for {self.user.username} in {self.quiz.title}"
+        return f"Result for {self.user.username} in {self.question.quiz.title}"
 
 
 class LastTestTime(models.Model):

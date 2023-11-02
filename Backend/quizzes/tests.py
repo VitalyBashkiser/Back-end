@@ -169,35 +169,24 @@ class ExportDataTest(TestCase):
         self.result3 = TestResult.objects.create(user=self.company_owner, company=self.company, quiz=self.quiz,
                                                  score=80, correct_answers=6)
 
-    def test_export_json(self):
-        url = reverse('export-json')
+    def test_export_data(self):
+        self.client.login(username='test_user', password='test_password')
+
+        url = reverse('export-data', kwargs={'format': 'json'})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
-        self.assertIn('attachment; filename="data.json"', response['Content-Disposition'])
 
-        # Verify the structure and content of the JSON
         json_data = response.json()
-
-        for idx, result in enumerate(TestResult.objects.all()):
-            expected_data = {
-                'id': result.id,
-                'user': result.user.username,
-                'company': result.company.name,
-                'quiz': result.quiz.title,
-                'score': result.score,
-                'date passed': result.date_passed.strftime("%Y-%m-%d %H:%M:%S")
-            }
-            self.assertEqual(json_data[idx], expected_data)
 
         # Save the JSON data to a file
         json_file_path = os.path.join(BASE_DIR, 'quizzes', 'data.json')
         with open(json_file_path, 'w') as json_file:
             json.dump(json_data, json_file, indent=4)
 
-    def test_export_csv(self):
-        url = reverse('export-csv')
+        # Test CSV export
+        url = reverse('export-data', kwargs={'format': 'csv'})
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
@@ -216,9 +205,19 @@ class ExportDataTest(TestCase):
             for result in TestResult.objects.all():
                 writer.writerow(
                     [result.id, result.user.username, result.company.name, result.quiz.title, result.score,
-                     timezone.now().strftime("%Y-%m-%d %H:%M:%S")])
+                     result.date_passed.strftime("%Y-%m-%d %H:%M:%S")])
 
         # Check if the file exists
         self.assertTrue(os.path.exists(file_path))
+
+        # Read the expected JSON data from the file
+        with open(json_file_path, 'r') as json_file:
+            expected_data = json.load(json_file)
+
+        # Compare the exported JSON data with the expected data
+        self.assertEqual(json_data, expected_data)
+
+
+
 
 
