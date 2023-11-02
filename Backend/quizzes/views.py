@@ -31,18 +31,31 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
 
 
-@csrf_exempt
+@login_required
+def export_data(request, format):
+    user = request.user
+    if format == 'json':
+        data = TestResult.objects.filter(user=user).values()
+        return JsonResponse(list(data), safe=False)
+    elif format == 'csv' and (user.is_owner or user.is_administrator):
+        return export_csv(request)
+    else:
+        return HttpResponse("Permission denied", status=403)
+
+
 def export_csv(request):
+    # Check if the 'profile' attribute is present for a user
+    if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
+        data = TestResult.objects.filter(company=request.user.profile.company)
+    else:
+        data = TestResult.objects.none()
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.csv"'
-
     writer = csv.writer(response)
     writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
-
-    for result in TestResult.objects.all():
-        writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
-                         result.date_passed.strftime("%Y-%m-%d %H:%M:%S")])
-
+    for result in data:
+        writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
+                         result.date_passed])
     return response
 
 
@@ -121,7 +134,7 @@ def create_result(request):
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response({'message': 'Test result successfully'}, status=status.HTTP_201_CREATED)
+    return Response({'message': 'Test result recorded successfully'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -142,22 +155,3 @@ def calculate_average_score(request):
     else:
         return Response({'average_score': 0}, status=status.HTTP_200_OK)
 
-
-@login_required
-def export_data(request, format):
-    user = request.user
-    if format == 'json':
-        data = TestResult.objects.filter(user=user).values()
-        return JsonResponse(list(data), safe=False)
-    elif format == 'csv' and (user.is_owner or user.is_administrator):
-        data = TestResult.objects.filter(company=user.company)
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="quiz_results.csv"'
-        writer = csv.writer(response)
-        writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
-        for result in data:
-            writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
-                             result.date_passed])
-        return response
-    else:
-        return HttpResponse("Permission denied", status=403)

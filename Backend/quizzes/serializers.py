@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Quiz, Question, Answer
+from .models import Quiz, Question, Answer, TestResult
 
 
 class AnswerSerializer(serializers.ModelSerializer):
@@ -35,3 +35,9 @@ class QuizSerializer(serializers.ModelSerializer):
                 Answer.objects.create(question=question, **answer_data)
 
         return quiz
+
+
+class TestResultSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TestResult
+        fields = ['id', 'user', 'company', 'quiz', 'score', 'correct_answers', 'date_passed']

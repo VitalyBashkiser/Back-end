@@ -51,3 +51,4 @@ class LastTestTime(models.Model):
         return f"Last test time for {self.user.username} in {self.quiz.title}"
 
 
+
