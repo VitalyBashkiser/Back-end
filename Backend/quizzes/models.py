@@ -7,7 +7,7 @@ from companies.models import Company
 class Quiz(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField()
-    frequency = models.PositiveIntegerField()  # Number indicating the frequency of taking the quiz in days
+    frequency = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -39,7 +39,7 @@ class TestResult(models.Model):
     date_passed = models.DateTimeField(default=timezone.now, blank=True, null=True)
 
     def __str__(self):
-        return f"Result for {self.user.username} in {self.quiz.title}"
+        return f"Result for {self.user.username} in {self.question.quiz.title}"
 
 
 class LastTestTime(models.Model):
@@ -49,5 +49,6 @@ class LastTestTime(models.Model):
 
     def __str__(self):
         return f"Last test time for {self.user.username} in {self.quiz.title}"
+
 
 

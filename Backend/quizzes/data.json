@@ -1,0 +1,11 @@
+[
+    {
+        "id": 469,
+        "user__username": "test_user",
+        "company__name": "Test Company",
+        "quiz__title": "test_quiz",
+        "score": 60,
+        "correct_answers": 4,
+        "date_passed": "2023-11-02T23:51:15.979Z"
+    }
+]

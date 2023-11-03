@@ -1,3 +1,5 @@
+import logging
+import csv
 from rest_framework import generics
 from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
@@ -7,8 +9,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-from companies.models import Company
 from django.db.models import Sum, Count
+from django.contrib.auth.decorators import login_required
+from companies.models import Company
+from django.http import JsonResponse, HttpResponse
+
+
+logger = logging.getLogger(__name__)
 
 
 class QuizListView(generics.ListCreateAPIView):
@@ -22,6 +29,35 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
 
 
+@login_required
+def export_data(request, format):
+    user = request.user
+    if format == 'json':
+        data = TestResult.objects.filter(user=user).values('id', 'user__username', 'company__name', 'quiz__title',
+                                                           'score', 'correct_answers', 'date_passed')
+        return JsonResponse(list(data), safe=False)
+    if format == 'csv':
+        return export_csv(request)
+    else:
+        return HttpResponse("Permission denied", status=403)
+
+
+def export_csv(request):
+    # Check if the 'profile' attribute is present for a user
+    if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
+        data = TestResult.objects.filter(company=request.user.profile.company)
+    else:
+        data = TestResult.objects.none()
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="data.csv"'
+    writer = csv.writer(response)
+    writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
+    for result in data:
+        writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
+                         result.date_passed])
+    return response
+
+
 @api_view(['POST'])
 def create_question_with_selected_answers(request):
     serializer = QuestionSerializer(data=request.data)
@@ -32,7 +68,7 @@ def create_question_with_selected_answers(request):
         answers_data = request.data.get('answers', [])
         for answer_data in answers_data:
             Answer.objects.create(
-                question=question,
+                question=question,  # This should be the actual question object
                 answer_text=answer_data['answer_text'],
                 is_correct=answer_data['is_correct']
             )
@@ -55,9 +91,6 @@ def create_result(request):
     score = request.data.get('score')
     correct_answers = request.data.get('correct_answers')
 
-    print(f'user_id: {user_id}, company_id: {company_id}, quiz_id: {quiz_id}, score: {score}, correct_answers:'
-          f' {correct_answers}')
-
     try:
         user = User.objects.get(id=user_id)
         company = Company.objects.get(id=company_id)
@@ -77,10 +110,10 @@ def create_result(request):
             score=score,
             correct_answers=correct_answers
         )
-        return Response({'message': 'Test result successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
-        print(f'Error: {e}')
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response({'message': 'Test result recorded successfully'}, status=status.HTTP_201_CREATED)
 
 
 @api_view(['POST'])
@@ -100,3 +133,4 @@ def calculate_average_score(request):
         return Response({'average_score': average_score}, status=status.HTTP_200_OK)
     else:
         return Response({'average_score': 0}, status=status.HTTP_200_OK)
+
