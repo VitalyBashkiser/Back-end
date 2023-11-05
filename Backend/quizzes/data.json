@@ -1,26 +1,11 @@
 [
     {
-        "id": 529,
-        "user": "test_user",
-        "company": "test_company",
-        "quiz": "test_quiz",
+        "id": 564,
+        "user__username": "test_user",
+        "company__name": "Test Company",
+        "quiz__title": "Test Quiz 3",
         "score": 60,
-        "date passed": "2023-10-31 00:00:54"
-    },
-    {
-        "id": 530,
-        "user": "company_admin",
-        "company": "test_company",
-        "quiz": "test_quiz",
-        "score": 70,
-        "date passed": "2023-10-31 00:00:54"
-    },
-    {
-        "id": 531,
-        "user": "company_owner",
-        "company": "test_company",
-        "quiz": "test_quiz",
-        "score": 80,
-        "date passed": "2023-10-31 00:00:54"
+        "correct_answers": 1,
+        "date_passed": "2023-11-05T00:34:59.471Z"
     }
 ]

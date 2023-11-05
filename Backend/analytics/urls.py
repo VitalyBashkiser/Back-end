@@ -10,7 +10,7 @@ from .views import (
 
 urlpatterns = [
     path('analytics/ratings/', RatingListView.as_view(), name='rating-list'),
-    path('analytics/quizcompletions/', QuizCompletionListView.as_view(), name='quizcompletion-list'),
+    path('analytics/quiz_completion/', QuizCompletionListView.as_view(), name='quizcompletion-list'),
     path('analytics/average_scores/quizzes/', AverageScoresListView.as_view(), name='quiz-averagescores-list'),
     path('analytics/average_scores/users/', UserAverageScoresListView.as_view(), name='user-averagescores-list'),
     path('analytics/average_scores/user/<int:user_id>/quizzes/', UserQuizAverageScoresListView.as_view(),

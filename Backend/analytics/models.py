@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from main.models import User
 from datetime import datetime
 
 
@@ -30,7 +30,7 @@ class AverageScores(models.Model):
 
 class CompanyUsersLastTest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE)  # Assuming you have a Company model
+    company = models.ForeignKey('companies.Company', on_delete=models.CASCADE)
     last_test_time = models.DateTimeField()
 
     class Meta:
