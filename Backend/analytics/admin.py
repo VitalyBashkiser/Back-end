@@ -11,8 +11,7 @@ def get_general_average_score():
     if total_ratings > 0:
         total_score = Rating.objects.aggregate(total_score=Sum('average_score'))['total_score']
         return total_score / total_ratings
-    else:
-        return None
+    return None
 
 
 # [ ] List of quizzes and the time if it’s last completions.
@@ -25,8 +24,7 @@ def get_quiz_completion_time(owner_id):
             if quiz.quiz.title not in quiz_times or quiz.completion_time > quiz_times[quiz.quiz.title]:
                 quiz_times[quiz.quiz.title] = quiz.completion_time
         return quiz_times
-    else:
-        return None
+    return None
 
 
 # [ ] List of average scores for each of the quiz from all companies with dynamics over time

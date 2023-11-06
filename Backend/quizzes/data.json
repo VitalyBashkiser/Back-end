@@ -1,11 +1,11 @@
 [
     {
-        "id": 564,
+        "id": 1,
         "user__username": "test_user",
         "company__name": "Test Company",
         "quiz__title": "Test Quiz 3",
         "score": 60,
         "correct_answers": 1,
-        "date_passed": "2023-11-05T00:34:59.471Z"
+        "date_passed": "2023-11-06T12:52:36.767Z"
     }
 ]

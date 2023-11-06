@@ -1,4 +1,4 @@
 id,user,company,quiz,score,date passed
-564,test_user,Test Company,Test Quiz 3,60,2023-11-05 00:34:59
-565,company_admin,Test Company,Test Quiz 1,70,2023-11-05 00:34:59
-566,company_owner,Test Company,Test Quiz 2,80,2023-11-05 00:34:59
+1,test_user,Test Company,Test Quiz 3,60,2023-11-06 12:52:36
+2,company_admin,Test Company,Test Quiz 1,70,2023-11-06 12:52:36
+3,company_owner,Test Company,Test Quiz 2,80,2023-11-06 12:52:36
