@@ -31,6 +31,7 @@ class User(AbstractUser, TimeStampedModel):
         blank=True,
         related_name='global_permissions'
     )
+    is_owner = models.BooleanField(default=False)
 
 
 
