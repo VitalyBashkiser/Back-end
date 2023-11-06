@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth.models import User
 from companies.models import Company
-from .models import Quiz, TestResult, Question
+from .models import Quiz, TestResult, Question, Answer
 from rest_framework.test import APITestCase
 from django.utils import timezone
 
@@ -34,7 +34,6 @@ class QuestionTests(APITestCase):
             ]
         }
         response = self.client.post(url, data, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         question = Question.objects.get(id=response.data['id'])
         self.assertEqual(question.question_text, "What is the capital of France?")
@@ -62,7 +61,6 @@ class QuestionTests2(APITestCase):
             ]
         }
         response = self.client.post(url, data, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         question = Question.objects.get(id=response.data['id'])
         self.assertEqual(question.question_text, "What is the largest mammal on Earth?")
@@ -90,7 +88,6 @@ class QuestionTests3(APITestCase):
             ]
         }
         response = self.client.post(url, data, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, 201)
         question = Question.objects.get(id=response.data['id'])
         self.assertEqual(question.question_text, "What is the capital of Japan?")
@@ -106,29 +103,52 @@ class QuizTests(TestCase):
         self.client.login(username='testuser', password='testpassword')
         self.company = Company.objects.create(name='Test Company', owner=self.user)
 
-    def test_start_quiz(self):
         # Create a quiz with frequency
         self.quiz = Quiz.objects.create(title='Test Quiz', description='Test Description', frequency=7)
 
+        # Create a question and associate it with the quiz
+        self.question = Question.objects.create(
+            quiz=self.quiz,
+            question_text='What is the capital of Japan?'
+        )
+
+        # Create answers and associate them with the question
+        self.answer1 = Answer.objects.create(
+            question=self.question,
+            answer_text='Tokyo',
+            is_correct=True
+        )
+        self.answer2 = Answer.objects.create(
+            question=self.question,
+            answer_text='Beijing',
+            is_correct=False
+        )
+        self.answer3 = Answer.objects.create(
+            question=self.question,
+            answer_text='Seoul',
+            is_correct=False
+        )
+
+    def test_start_quiz(self):
         response = self.client.post(reverse('start-quiz', args=[self.quiz.id]))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Quiz started successfully")
 
     def test_create_result(self):
-        # Create a quiz with frequency
-        self.quiz = Quiz.objects.create(title='Test Quiz', description='Test Description', frequency=7)
+        url = reverse('create_result')
 
-        # Simulate user taking a quiz and answering questions
         data = {
             'user_id': self.user.id,
             'company_id': self.company.id,
             'quiz_id': self.quiz.id,
+            'question_id': self.question.id,
+            'selected_answer': self.answer1.id,  # You may need to adjust this based on your implementation
             'score': random.randint(0, 100),
-            'correct_answers': random.randint(0, 10),  # Simulated correct answers
+            'correct_answers': random.randint(0, 10),
             'date_passed': timezone.now()
         }
 
-        response = self.client.post(reverse('create_result'), data, format='json')
+        response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
 
         # Verify that the record about the passed test was saved to the database
@@ -140,34 +160,134 @@ class QuizTests(TestCase):
 
 class ExportDataTest(TestCase):
     def setUp(self):
-        # Create a user with an associated company
+        # Creating users
         self.user = User.objects.create_user(username='test_user', password='test_password')
-        self.company = Company.objects.create(name='Test Company', owner=self.user)
-        self.client.login(username='test_user', password='test_password')
-
-        # Create a company and associate it with the user
         self.company_owner = User.objects.create_user(username='company_owner', password='test_password')
-        self.client.login(username='company_owner', password='test_password')
-
         self.company_admin = User.objects.create_user(username='company_admin', password='test_password')
-        self.client.login(username='company_admin', password='test_password')
 
-        # Assign roles
+        # We create a company and associate it with the owner and administrator
+        self.company = Company.objects.create(name='Test Company', owner=self.company_owner)
         self.company_owner.is_owner = True
         self.company_owner.save()
         self.company_admin.is_administrator = True
         self.company_admin.save()
 
-        # Creating a quiz
-        self.quiz = Quiz.objects.create(title='test_quiz')
+        # Login as test users
+        self.client.login(username='test_user', password='test_password')
+        self.client.login(username='company_owner', password='test_password')
+        self.client.login(username='company_admin', password='test_password')
 
-        # Create quiz results
-        self.result1 = TestResult.objects.create(user=self.user, company=self.company, quiz=self.quiz, score=60,
-                                                 correct_answers=4)
-        self.result2 = TestResult.objects.create(user=self.company_admin, company=self.company, quiz=self.quiz,
-                                                 score=70, correct_answers=5)
-        self.result3 = TestResult.objects.create(user=self.company_owner, company=self.company, quiz=self.quiz,
-                                                 score=80, correct_answers=6)
+        # We create quizzes
+        self.quiz1 = Quiz.objects.create(
+            title='Test Quiz 3',
+            description='This quiz is about capitals again',
+            frequency=30
+        )
+
+        self.quiz2 = Quiz.objects.create(
+            title='Test Quiz 1',
+            description='This quiz is about capitals',
+            frequency=7
+        )
+
+        self.quiz3 = Quiz.objects.create(
+            title='Test Quiz 2',
+            description='This quiz is about animals',
+            frequency=14
+        )
+
+        # Creating questions and answers
+        # Question 1
+        self.question1 = Question.objects.create(
+            quiz=self.quiz1,
+            question_text='What is the capital of Japan?'
+        )
+        self.answer1_1 = Answer.objects.create(
+            question=self.question1,
+            answer_text='Tokyo',
+            is_correct=True
+        )
+        self.answer1_2 = Answer.objects.create(
+            question=self.question1,
+            answer_text='Beijing',
+            is_correct=False
+        )
+        self.answer1_3 = Answer.objects.create(
+            question=self.question1,
+            answer_text='Seoul',
+            is_correct=False
+        )
+
+        # Question 2
+        self.question2 = Question.objects.create(
+            quiz=self.quiz2,
+            question_text='What is the capital of France?'
+        )
+        self.answer2_1 = Answer.objects.create(
+            question=self.question2,
+            answer_text='Paris',
+            is_correct=True
+        )
+        self.answer2_2 = Answer.objects.create(
+            question=self.question2,
+            answer_text='London',
+            is_correct=False
+        )
+        self.answer2_3 = Answer.objects.create(
+            question=self.question2,
+            answer_text='Berlin',
+            is_correct=False
+        )
+
+        # Question 3
+        self.question3 = Question.objects.create(
+            quiz=self.quiz3,
+            question_text='What is the largest mammal on Earth?'
+        )
+        self.answer3_1 = Answer.objects.create(
+            question=self.question3,
+            answer_text='Elephant',
+            is_correct=False
+        )
+        self.answer3_2 = Answer.objects.create(
+            question=self.question3,
+            answer_text='Blue Whale',
+            is_correct=True
+        )
+        self.answer3_3 = Answer.objects.create(
+            question=self.question3,
+            answer_text='Giraffe',
+            is_correct=False
+        )
+
+        # Create test results
+        self.result1 = TestResult.objects.create(
+            user=self.user,
+            company=self.company,
+            quiz=self.quiz1,
+            question=self.question1,
+            selected_answer=self.answer1_1,
+            score=60,
+            correct_answers=1
+        )
+        self.result2 = TestResult.objects.create(
+            user=self.company_admin,
+            company=self.company,
+            quiz=self.quiz2,
+            question=self.question2,
+            selected_answer=self.answer2_1,
+            score=70,
+            correct_answers=1
+        )
+        self.result3 = TestResult.objects.create(
+            user=self.company_owner,
+            company=self.company,
+            quiz=self.quiz3,
+            question=self.question3,
+            selected_answer=self.answer3_2,
+            score=80,
+            correct_answers=1
+        )
 
     def test_export_data(self):
         self.client.login(username='test_user', password='test_password')
@@ -216,8 +336,3 @@ class ExportDataTest(TestCase):
 
         # Compare the exported JSON data with the expected data
         self.assertEqual(json_data, expected_data)
-
-
-
-
-
