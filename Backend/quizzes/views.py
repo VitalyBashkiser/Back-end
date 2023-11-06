@@ -15,6 +15,9 @@ from django.contrib.auth.decorators import login_required
 from companies.models import Company
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.dispatch import receiver
+from notifications.models import Notification
+from django.db.models.signals import post_save
 
 
 logger = logging.getLogger(__name__)
@@ -161,3 +164,12 @@ def export_data(request, format):
         return response
     else:
         return HttpResponse("Permission denied", status=403)
+
+
+@receiver(post_save, sender=Quiz)
+def send_quiz_creation_notification(sender, instance, created, **kwargs):
+    if created:
+        company = instance.company
+        users = User.objects.filter(company=company)
+        for user in users:
+            Notification.objects.create(text=f'New quiz available: {instance.title}', user=user)
