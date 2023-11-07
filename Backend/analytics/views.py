@@ -1,4 +1,3 @@
-from .permissions import IsCompanyAdminOrOwner
 from rest_framework import generics, permissions
 from .models import Rating, QuizCompletion, AverageScores
 from .serializers import RatingSerializer, QuizCompletionSerializer, AverageScoresSerializer,\
@@ -12,10 +11,13 @@ class RatingListView(generics.ListAPIView):
     serializer_class = RatingSerializer
 
 
-class QuizCompletionListView(generics.ListAPIView):
-    queryset = QuizCompletion.objects.all()
+class QuizCompletionListView(generics.ListCreateAPIView):
     serializer_class = QuizCompletionSerializer
-    permission_classes = [permissions.IsAuthenticated & IsCompanyAdminOrOwner]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return QuizCompletion.objects.filter(user=user)
 
 
 class AverageScoresListView(generics.ListAPIView):

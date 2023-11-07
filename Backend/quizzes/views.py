@@ -1,6 +1,6 @@
 import logging
 import csv
-import json
+from django.db.models import Q
 from rest_framework import generics
 from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
@@ -14,7 +14,6 @@ from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required
 from companies.models import Company
 from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.dispatch import receiver
 from notifications.models import Notification
 from django.db.models.signals import post_save
@@ -34,38 +33,32 @@ class QuizDetailView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = QuizSerializer
 
 
-@csrf_exempt
+@login_required
+def export_data(request, format):
+    user = request.user
+    if format == 'json':
+        data = TestResult.objects.filter(user=user).values('id', 'user__username', 'company__name', 'quiz__title',
+                                                           'score', 'correct_answers', 'date_passed')
+        return JsonResponse(list(data), safe=False)
+    if format == 'csv':
+        return export_csv(request)
+    else:
+        return HttpResponse("Permission denied", status=403)
+
+
 def export_csv(request):
+    # Check if the 'profile' attribute is present for a user
+    if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
+        data = TestResult.objects.filter(company=request.user.profile.company)
+    else:
+        data = TestResult.objects.none()
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="data.csv"'
-
     writer = csv.writer(response)
     writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
-
-    for result in TestResult.objects.all():
-        writer.writerow([result.id, result.user.username, result.company.name, result.quiz.title, result.score,
-                         result.date_passed.strftime("%Y-%m-%d %H:%M:%S")])
-
-    return response
-
-
-@csrf_exempt
-def export_json(request):
-    quiz_results = []
-    for result in TestResult.objects.all():
-        quiz_results.append({
-            'id': result.id,
-            'user': result.user.username,
-            'company': result.company.name,
-            'quiz': result.quiz.title,
-            'score': result.score,
-            'date passed': result.date_passed.strftime("%Y-%m-%d %H:%M:%S")
-        })
-
-    json_data = json.dumps(quiz_results, indent=4)
-
-    response = HttpResponse(json_data, content_type='application/json')
-    response['Content-Disposition'] = 'attachment; filename="data.json"'
+    for result in data:
+        writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
+                         result.date_passed])
     return response
 
 
@@ -146,30 +139,13 @@ def calculate_average_score(request):
         return Response({'average_score': 0}, status=status.HTTP_200_OK)
 
 
-@login_required
-def export_data(request, format):
-    user = request.user
-    if format == 'json':
-        data = TestResult.objects.filter(user=user).values()
-        return JsonResponse(list(data), safe=False)
-    elif format == 'csv' and (user.is_owner or user.is_administrator):
-        data = TestResult.objects.filter(company=user.company)
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="quiz_results.csv"'
-        writer = csv.writer(response)
-        writer.writerow(['id', 'user', 'company', 'quiz', 'score', 'date passed'])
-        for result in data:
-            writer.writerow([result.id, result.user.username, result.company.name, result.quiz, result.score,
-                             result.date_passed])
-        return response
-    else:
-        return HttpResponse("Permission denied", status=403)
-
-
 @receiver(post_save, sender=Quiz)
 def send_quiz_creation_notification(sender, instance, created, **kwargs):
     if created:
-        company = instance.company
-        users = User.objects.filter(company=company)
+        company = instance.associated_company
+        users = User.objects.filter(Q(owned_companies=company) | Q(administered_companies=company)).distinct()
         for user in users:
             Notification.objects.create(text=f'New quiz available: {instance.title}', user=user)
+
+
+
