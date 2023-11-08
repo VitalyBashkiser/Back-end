@@ -1,5 +1,6 @@
 import logging
 import csv
+from django.db.models import Q
 from rest_framework import generics
 from .models import Quiz, TestResult, Answer
 from .serializers import QuizSerializer, QuestionSerializer
@@ -13,6 +14,9 @@ from django.db.models import Sum, Count
 from django.contrib.auth.decorators import login_required
 from companies.models import Company
 from django.http import JsonResponse, HttpResponse
+from django.dispatch import receiver
+from notifications.models import Notification
+from django.db.models.signals import post_save
 
 
 logger = logging.getLogger(__name__)
@@ -133,4 +137,15 @@ def calculate_average_score(request):
         return Response({'average_score': average_score}, status=status.HTTP_200_OK)
     else:
         return Response({'average_score': 0}, status=status.HTTP_200_OK)
+
+
+@receiver(post_save, sender=Quiz)
+def send_quiz_creation_notification(sender, instance, created, **kwargs):
+    if created:
+        company = instance.associated_company
+        users = User.objects.filter(Q(owned_companies=company) | Q(administered_companies=company)).distinct()
+        for user in users:
+            Notification.objects.create(text=f'New quiz available: {instance.title}', user=user)
+
+
 

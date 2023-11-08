@@ -7,7 +7,8 @@ from companies.models import Company
 class Quiz(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
-    frequency = models.IntegerField(default=0)  # Number indicating the frequency of taking the quiz in days
+    frequency = models.IntegerField(default=0)
+    associated_company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title
