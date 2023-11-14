@@ -20,7 +20,6 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
 # Application definition
 
 INSTALLED_APPS = [
-    'main',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -32,6 +31,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
+    'django_celery_beat',
+    'main',
     'companies',
     'corsheaders',
     'quizzes',
@@ -49,11 +50,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://192.168.10.47:8080',
     "http://localhost:8080",
 ]
 
@@ -150,6 +149,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CELERY_BROKER_URL = 'redis://redis:6379/0'  # URL of message broker (Redis)
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'  # URL of message broker for task results
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+CELERY_IMPORTS = ("quizzes.tasks",)
+
+FLOWER_PORT = config('FLOWER_PORT', default=5556, cast=int)
+FLOWER_BASIC_AUTH = (config('FLOWER_USER', default='flower'), config('FLOWER_PASSWORD', default='mydefaultvalue'))
 
 EMAIL_HOST = config('EMAIL_HOST', default='mydefaultvalue')
 EMAIL_PORT = config('EMAIL_PORT', default=587, cast=int)
