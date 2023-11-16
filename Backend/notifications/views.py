@@ -36,3 +36,5 @@ def mark_notification_as_read(request, pk):
 
     notification.mark_as_read()
     return Response({'message': 'Notification marked as read'}, status=status.HTTP_200_OK)
+
+

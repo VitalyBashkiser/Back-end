@@ -25,3 +25,24 @@ services:
 
     volumes:
       - .:/code
+
+  flower:
+    image: mher/flower:latest
+    command: celery flower -A Backend --broker=redis://redis:6379/0
+    environment:
+      - FLOWER_BASIC_AUTH=${FLOWER_USER}:${FLOWER_PASSWORD}
+    ports:
+      - "5556:5556"
+    depends_on:
+      - web
+
+
+
+
+
+
+
+
+
+
+

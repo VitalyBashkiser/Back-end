@@ -7,7 +7,7 @@ WORKDIR /Backend
 # Install net-tools for networking utilities
 RUN apt-get update && apt-get install -y net-tools
 
-# set environment variables
+# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
