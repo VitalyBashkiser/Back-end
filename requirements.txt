@@ -9,7 +9,7 @@ charset-normalizer==3.3.0
 click==8.1.7
 colorama==0.4.6
 common-fate-schema==0.7.0
-cryptography==41.0.4
+cryptography==42.0.4
 defusedxml==0.7.1
 Deprecated==1.2.14
 Django==4.2.6
